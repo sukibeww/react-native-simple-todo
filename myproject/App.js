@@ -1,42 +1,33 @@
 import React, { useState } from 'react';
+import Header from './components/header'
+import TodoItem from './components/todoItem'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
 
 export default function App() {
-  const [ people, setPeople ] = useState([
-    {name: 'suki', id: "1"},
-    {name: 'shaun', id: "2"},
-    {name: 'sherry', id: "3"},
-    {name: 'sean', id: "4"},
-    {name: 'shuri', id: "5"},
-    {name: 'soham', id: "6"},
-    {name: 'saki', id: "7"},
-    {name: 'stan', id: "8"},
+  const [ todos, setTodos ] = useState([
+    { text: 'buy a coffee' , key: '1'},
+    { text: 'create an app' , key: '2'},
+    { text: 'play on the switch' , key: '3'},
   ])
 
-  const pressHandler = (id) =>{
-    setPeople(()=> {return people.filter((item) => item.id != id)})
+  const pressHandler = (key) => {
+    setTodos((prev) => {
+      return prev.filter(todo => todo.key != key)
+    })
   }
   return (
     <View style={styles.container}>
-      <FlatList
-        numColumns={2}
-        keyExtractor={(item) => item.id}
-        data={people}
-        renderItem={({item}) => (
-          <TouchableOpacity onPress={()=> pressHandler(item.id)}>
-            <Text style={styles.item}>{item.name}</Text>
-          </TouchableOpacity>
-        )}
-      />
-      {/* <ScrollView>
-        {people.map((item)=>{
-          return(
-            <View key={item.key}>
-              <Text style={styles.item}>{item.name}</Text>
-            </View>
-          )
-        })}
-      </ScrollView> */}
+      <Header />
+      <View style={styles.content}>
+        <View style={styles.list}>
+          <FlatList
+            data={todos}
+            renderItem={({item})=> (
+              <TodoItem item={item} pressHandler={pressHandler}/>
+            )}
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -45,15 +36,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 50,
-    paddingHorizontal: 20
   },
-  item:{
-    marginTop: 24,
-    padding: 30,
-    backgroundColor: 'pink',
-    fontSize: 24,
-    marginHorizontal: 10,
-    marginTop: 20
+  content: {
+    padding: 40,
+  },
+  list: {
+    marginTop: 20,
   }
 });
